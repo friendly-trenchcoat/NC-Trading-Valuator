@@ -15,6 +15,10 @@ Values items at:
   - User Item List
   - Item (also adds link to DTI 2020)
 
+#
+#### Example: JN Shenanigifts Prizes
+![Example: JN Shenanigifts Prizes](wakademo.png)
+
 
 ## Note:
 Waka is a community resource that tracks the approximate value of NC items, based on real-world trades.
