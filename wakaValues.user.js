@@ -4,7 +4,7 @@
 // @description  Automatically label NC items with waka value. Visit ~/waka to refresh values.
 // @author       friendly-trenchcoat
 // @match        http://www.neopets.com/~waka
-// @match        http://www.neopets.com/inventory.phtml
+// @match        http://www.neopets.com/inventory.phtml*
 // @match        http://www.neopets.com/closet.phtml*
 // @match        http://www.neopets.com/safetydeposit.phtml*
 // @match        http*://items.jellyneo.net/*
@@ -26,6 +26,7 @@
     'use strict';
     console.log('Waka Pricer');
 
+
     // Store & Fetch waka data
     if (document.URL.includes("~waka")) {
         let items_arr = document.getElementsByClassName("itemList")[0].innerText.split('\n');
@@ -35,37 +36,55 @@
             return o;
         }, {});
         GM_setValue("NEOPETS_WAKA", JSON.stringify(items));
+        console.log('Waka values updated.');
     }
     else {
+        var WAKA;
         try {
-            const WAKA = JSON.parse(GM_getValue("NEOPETS_WAKA"));
-            createCSS();
-            drawValues(WAKA);
+            WAKA = JSON.parse(GM_getValue("NEOPETS_WAKA"));
         }
         catch (err) {
             console.log('Visit waka to populate data: http://www.neopets.com/~waka');
         }
+        if (WAKA) {
+            createCSS();
+            drawValues(WAKA);
+        }
     }
 
     function drawValues(WAKA) {
-        // Beta Inventory
+        // stealin this
+        jQuery.fn.justtext = function () {
+            return $(this).clone().children().remove().end().text();
+        };
+
         if (document.URL.includes("neopets.com/inventory")) {
-            $(document).ajaxSuccess(function () {
-                $('.item-subname:contains("wearable"):contains("Neocash"):not(:contains("no trade"))').each(function (i, el) {
-                    let $parent = $(el).parent();
-                    if (!$parent.find('.waka').length) {
-                        const name = $parent.find('.item-name').text();
-                        const value = WAKA[name] || '?';
-                        $parent.children().eq(0).after(`<div class="waka"><div>${value}</div></div>`);
-                    }
+            if ($('#navnewsdropdown__2020').length) {
+                // Beta Inventory
+                $(document).ajaxSuccess(function () {
+                    $('.item-subname:contains("wearable"):contains("Neocash"):not(:contains("no trade"))').each(function (i, el) {
+                        let $parent = $(el).parent();
+                        if (!$parent.find('.waka').length) {
+                            const name = $parent.find('.item-name').text();
+                            const value = WAKA[name] || '?';
+                            $parent.children().eq(0).after(`<div class="waka"><div>${value}</div></div>`);
+                        }
+                    });
                 });
-            });
+            } else {
+                // Classic Inventory
+                $('td.wearable:contains(Neocash)').each(function (i, el) {
+                    const name = $(el).justtext();
+                    const value = WAKA[name] || '?';
+                    $(el).append(`<div class="waka"><div>${value}</div></div>`);
+                });
+            }
         }
 
         // Closet
         else if (document.URL.includes("neopets.com/closet")) {
             $('td>b:contains("Artifact - 500")').each(function (i, el) {
-                const name = $(el).text().slice(0, -16);
+                const name = $(el).justtext();
                 const value = WAKA[name] || '?';
                 $(el).parent().prev().append(`<div class="waka"><div>${value}</div></div>`);
             });
@@ -73,8 +92,8 @@
 
         // SDB
         else if (document.URL.includes("neopets.com/safetydeposit")) {
-            $('tr[bgcolor="#DFEAF7"]').each(function (i, el) {
-                const name = $(el).find('b').first().text().slice(0, -10);
+            $('tr[bgcolor="#DFEAF7"]:contains(Neocash)').each(function (i, el) {
+                const name = $(el).find('b').first().justtext();
                 const value = WAKA[name] || '?';
                 $(el).children().eq(0).append(`<div class="waka"><div>${value}</div></div>`);
             });
