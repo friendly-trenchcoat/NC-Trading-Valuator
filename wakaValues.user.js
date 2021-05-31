@@ -159,7 +159,7 @@
                 $("#item-name").after(`<div class="waka"><div>${value}</div></div>`);
             }
             //$('header#item-header>div').append($(`<a href="https://impress-2020.openneo.net/items/search/${encodeURIComponent(name)}" target="_blank">DTI 2020</a>`));
-            $('header#item-header>div').append($(`<a href="https://impress-2020.openneo.net/items/${window.location.href.split('/').pop()}" target="_blank">DTI 2020</a>`));
+            $('header#item-header>div').append($(`<a href="https://impress-2020.openneo.net/items/${$('#item-preview-header > a').attr('href').split('=').pop()}" target="_blank">DTI 2020</a>`));
         }
     }
 
