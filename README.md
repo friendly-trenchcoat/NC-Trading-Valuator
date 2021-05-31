@@ -3,7 +3,8 @@ Automatically label NC items with waka value. Visit ~/waka to refresh values.
 
 Values items at:
 - Neopets 
-  -  Beta Inventory
+  - Beta Inventory
+  - Inventory
   - Closet
   - SDB
 - JellyNeo 
