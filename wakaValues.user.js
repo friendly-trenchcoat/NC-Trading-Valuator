@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Waka Pricer
-// @version      1.0
+// @version      1.01
 // @description  Automatically label NC items with waka value. Visit ~/waka to refresh values.
 // @author       friendly-trenchcoat
 // @match        http://www.neopets.com/~waka
 // @match        http://www.neopets.com/inventory.phtml*
 // @match        http://www.neopets.com/closet.phtml*
 // @match        http://www.neopets.com/safetydeposit.phtml*
+// @match        http://www.neopets.com/gallery/index.phtml*
 // @match        http*://items.jellyneo.net/*
 // @match        http*://www.jellyneo.net/?go=*
 // @match        http*://impress.openneo.net/*
@@ -96,6 +97,15 @@
                 const name = $(el).find('b').first().justtext();
                 const value = WAKA[name] || '?';
                 $(el).children().eq(0).append(`<div class="waka"><div>${value}</div></div>`);
+            });
+        }
+
+        // Gallery
+        else if (document.URL.includes("neopets.com/gallery")) {
+            $('td>b.textcolor').each(function (i, el) {
+                const name = $(el).text();
+                const value = WAKA[name];
+                if (value) $(el).before(`<div class="waka"><div>${value}</div></div>`);
             });
         }
 
