@@ -20,7 +20,7 @@ Values items at:
 
 #
 #### Example: JN Shenanigifts Prizes
-![Example: JN Shenanigifts Prizes](wakademo.png)
+![Example: JN Shenanigifts Prizes](demo.png)
 
 
 ## Note:
