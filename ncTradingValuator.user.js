@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         NC Trading Valuator
-// @version      2.0
+// @version      2.0.1
 // @description  Automatically label NC items with owls value. Visit ~/Owls and ~/OwlsTwo to refresh values.
 // @author       friendly-trenchcoat
 // @match        https://www.neopets.com/~Owls
@@ -41,32 +41,32 @@
     'use strict';
     console.log('NC Trading Valuator');
 
+    let VALUES = GM_getValue("NEOPETS_NC_TRADING");
+    VALUES = VALUES ? JSON.parse(VALUES) || {} : {};
 
     // Store & Fetch owls data
     if (document.URL.toLowerCase().includes("~owls")) {
         const items = document.getElementsByClassName("tooltip");
-        const values = JSON.parse(GM_getValue("NEOPETS_NC_TRADING")) || {};
         let split;
         for (let i = 0; i < items.length; i++) {
             split = items[i].innerText.split(' ~ ');
             if (split.length === 2) {
-                values[split[0]] = split[1];
+                VALUES[split[0]] = split[1];
             }
         }
-        GM_setValue("NEOPETS_NC_TRADING", JSON.stringify(values));
-        console.log(`${document.URL.split('~')[1]} values updated:`, values);
+        GM_setValue("NEOPETS_NC_TRADING", JSON.stringify(VALUES));
+        console.log(`${document.URL.split('~')[1]} values updated:`, VALUES);
     }
     else {
-        var OWLS = JSON.parse(GM_getValue("NEOPETS_NC_TRADING"));
-        if (OWLS) {
+        if (Object.keys(VALUES).length) {
             createCSS();
-            drawValues(OWLS);
+            drawValues();
         } else {
             console.log('Visit owls to populate data: https://www.neopets.com/~Owls https://www.neopets.com/~OwlsTwo');
         }
     }
 
-    function drawValues(OWLS) {
+    function drawValues() {
         // stealin this
         try {
             jQuery.fn.justtext = function () {
@@ -82,7 +82,7 @@
                         let $parent = $(el).parent();
                         if (!$parent.find('.owls').length) {
                             const name = $parent.find('.item-name').text();
-                            const value = OWLS[name] || '?';
+                            const value = VALUES[name] || '?';
                             $parent.children().eq(0).after(`<div class="owls"><div>${value}</div></div>`);
                         }
                     });
@@ -91,7 +91,7 @@
                 // Classic Inventory
                 $('td.wearable:contains(Neocash)').each(function (i, el) {
                     const name = $(el).justtext();
-                    const value = OWLS[name] || '?';
+                    const value = VALUES[name] || '?';
                     $(el).append(`<div class="owls"><div>${value}</div></div>`);
                 });
             }
@@ -101,7 +101,7 @@
         else if (document.URL.includes("neopets.com/closet")) {
             $('td>b:contains("Artifact - 500")').each(function (i, el) {
                 const name = $(el).justtext();
-                const value = OWLS[name] || '?';
+                const value = VALUES[name] || '?';
                 $(el).parent().prev().append(`<div class="owls"><div>${value}</div></div>`);
             });
         }
@@ -110,7 +110,7 @@
         else if (document.URL.includes("neopets.com/safetydeposit")) {
             $('tr[bgcolor="#DFEAF7"]:contains(Neocash)').each(function (i, el) {
                 const name = $(el).find('b').first().justtext();
-                const value = OWLS[name] || '?';
+                const value = VALUES[name] || '?';
                 $(el).children().eq(0).append(`<div class="owls"><div>${value}</div></div>`);
             });
         }
@@ -119,7 +119,7 @@
         else if (document.URL.includes("neopets.com/gallery")) {
             $('td>b.textcolor').each(function (i, el) {
                 const name = $(el).text();
-                const value = OWLS[name];
+                const value = VALUES[name];
                 if (value) $(el).before(`<div class="owls"><div>${value}</div></div>`);
             });
         }
@@ -128,7 +128,7 @@
         else if (document.URL.includes("items.jellyneo.net")) {
             $('img.item-result-image.nc').each((i, el) => {
                 const name = $(el).attr('title').split(' - r')[0];
-                const value = OWLS[name] || '?';
+                const value = VALUES[name] || '?';
                 let $parent = $(el).parent();
                 let $next = $parent.next();
                 if ($next.is('br')) $next.remove();
@@ -140,7 +140,7 @@
         else if (document.URL.includes("www.jellyneo.net")) {
             $('img[src*="/items/"]').each((i, el) => {
                 const name = $(el).attr('title') || $(el).attr('alt');
-                const value = OWLS[name];
+                const value = VALUES[name];
                 if (value) {
                     let $parent = $(el).parent();
                     let $next = $parent.next();
@@ -158,7 +158,7 @@
                         let $parent = $(el).parent();
                         if (!$parent.find('.owls').length) {
                             const name = $parent.text().match(/ (\S.*)  i /)[1];
-                            const value = OWLS[name] || '?';
+                            const value = VALUES[name] || '?';
                             $parent.children().eq(0).after(`<div class="owls"><div>${value}</div></div>`);
                         }
                     });
@@ -171,7 +171,7 @@
                 let $parent = $(el).parent();
                 if (!$parent.find('.owls').length) {
                     const name = $parent.find('span.name').text();
-                    const value = OWLS[name] || '?';
+                    const value = VALUES[name] || '?';
                     $parent.children().eq(0).after(`<div class="owls"><div>${value}</div></div>`);
                 }
             });
@@ -180,7 +180,7 @@
         else if (document.URL.includes("impress.openneo.net/items")) {
             if (document.querySelectorAll('img.nc-icon').length) {
                 const name = document.getElementById("item-name").innerText;
-                const value = OWLS[name] || '?';
+                const value = VALUES[name] || '?';
                 const outerDiv = document.createElement('div');
                 outerDiv.classList.add('owls');
                 const innerDiv = document.createElement('div');
@@ -205,7 +205,7 @@
                         badge_els = el.nextElementSibling.querySelectorAll('ul > li');
                         if (badge_els.length > 1 && badge_els[0].textContent.includes('NC') && !badge_els[1].classList.contains('owls')) {
                             const name = el.textContent || el.innerText;
-                            const value = OWLS[name] || '?';
+                            const value = VALUES[name] || '?';
                             const outerDiv = document.createElement('li');
                             outerDiv.classList.add('owls');
                             const innerDiv = document.createElement('div');
