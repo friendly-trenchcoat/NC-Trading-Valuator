@@ -23,7 +23,18 @@ Values items at:
 ![Example: JN Shenanigifts Prizes](demo.png)
 
 
-## Note:
+---
+## Installation
+This script is written and tested in Chrome on desktop, but should be compatible with all major browsers, including Firefox, Safari, Opera, and Edge. 
+
+Please contact me on github or reddit if you encounter any issues.
+
+1. Install the [Tampermonkey](https://www.tampermonkey.net/) browser extension, or other such userscript manager
+2. Click [here](https://github.com/friendly-trenchcoat/NC-Trading-Valuator/raw/main/ncTradingValuator.user.js) to install the userscript
+3. Visit [~/Owls](http://www.neopets.com/~owls) and [~/OwlsTwo](https://www.neopets.com/~OwlsTwo) to populate the values
+
+---
+## Note
 This script is not associated with the wonderful people who run Owls, so if the page format changes I'll need to update it.
 Previously this script was for /~waka
 
