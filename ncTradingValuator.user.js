@@ -18,6 +18,7 @@
 
 /**
  * This script is not associated with the wonderful people who run the NC trading value guides, so if any page format changes I'll need to update it.
+ * Currently for /~lebron [discord: https://discord.gg/KYvNMpawDn]
  * Previously this script was for /~owls and before that /~waka
  * 
  * NC trading value guides are a community resource that tracks the approximate value of NC items, based on real-world trades:
@@ -29,7 +30,7 @@
  *          cannot modify values without trade reports.
  *      Items without values lack values for differing reasons, including lack of data and recency of release. These items are NOT 
  *          uniform in value or rarity: some are low, high, common, or rare. If you need help with an item that does not have a value 
- *          listed, please make a value check board and/or check the neopets discord's NC trading channel.
+ *          listed, please make a value check board and/or check the neopets discord's NC trading channel or the lebron discord.
  *
  */
 
